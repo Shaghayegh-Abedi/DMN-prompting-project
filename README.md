@@ -56,7 +56,7 @@ The repository is organized as follows:
    - Guides the LLM to extract inputs, evaluate rules, and generate responses.
 4. **Output**: A decision-specific feedback message.
 
-No manual prompt tweaking is needed, just modify the DMN file.
+No manual prompt tweaking is needed; just modify the DMN file.
 
 ---
 
@@ -65,13 +65,14 @@ No manual prompt tweaking is needed, just modify the DMN file.
 ### Requirements
 
 * Python 3.8 or higher
+* openai
 * Jupyter Lab or Jupyter Notebook
 * An API key for the Large Language Model you are using (e.g., OpenAI).
 
 ### Installation
 
 ```bash
-git clone https://github.com/your-username/dmn-guided-prompting
+git clone [https://github.com/your-username/dmn-guided-prompting](https://github.com/Shaghayegh-Abedi/DMN-prompting-project.git)
 cd dmn-guided-prompting
 pip install -r requirements.txt
 ```
