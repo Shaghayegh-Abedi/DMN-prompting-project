@@ -73,7 +73,7 @@ No manual prompt tweaking is needed; just modify the DMN file.
 
 ```bash
 git clone https://github.com/Shaghayegh-Abedi/DMN-prompting-project
-cd dmn-guided-prompting
+cd DMN-prompting-project
 pip install -r requirements.txt
 ```
 
