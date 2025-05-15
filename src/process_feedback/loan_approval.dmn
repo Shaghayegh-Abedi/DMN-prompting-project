@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/" id="definitions_0dit8ew" name="definitions" namespace="http://camunda.org/schema/1.0/dmn" exporter="dmn-js (https://demo.bpmn.io/dmn)" exporterVersion="17.2.0">
+  <decision id="decision_0a24hyi" name="Loan Approval Rule">
+    <informationRequirement id="InformationRequirement_07fwlid">
+      <requiredInput href="#InputData_1y777x8" />
+    </informationRequirement>
+    <informationRequirement id="InformationRequirement_1cy5gcx">
+      <requiredInput href="#InputData_10ydu45" />
+    </informationRequirement>
+    <decisionTable id="decisionTable_08kzgjj">
+      <input id="input1" label="salary">
+        <inputExpression id="inputExpression1" typeRef="string">
+          <text></text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_1wigltl" label="creditScore">
+        <inputExpression id="LiteralExpression_0hg0syf" typeRef="string">
+          <text></text>
+        </inputExpression>
+      </input>
+      <output id="output1" label="Is Eligible for Loan?" name="" typeRef="string" />
+      <rule id="DecisionRule_1wpfjnr">
+        <inputEntry id="UnaryTests_0jlmrx1">
+          <text>&gt; 50000</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1d0cawx">
+          <text>&gt;= 700</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0udx60s">
+          <text>approve</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1kgcd3v">
+        <inputEntry id="UnaryTests_014q6kq">
+          <text>&gt; 50000</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0c9mvwj">
+          <text>[650..700[</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_19x4ug4">
+          <text>manual_review</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0lhkyg7">
+        <inputEntry id="UnaryTests_187xdqb">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0cyd812">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_09pbvaq">
+          <text>decline</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <decision id="Decision_12mjgue" name="Loan Approval Result">
+    <variable id="InformationItem_0jl88cf" name="Loan Approval Result" />
+    <informationRequirement id="InformationRequirement_1etwdlw">
+      <requiredDecision href="#decision_0a24hyi" />
+    </informationRequirement>
+    <literalExpression id="LiteralExpression_1cuhh8z">
+      <text>approave_message = "We're pleased to inform you that your loan application has been approved. Congratulations!".
+manual_review_message = "We’d like to inform you that your application has been processed and requires a manual review. We will update you as soon as the review is complete.".
+decline_message = "We regret to inform you that your loan application has not been approved due to either insufficient income or credit score. If you have any questions or would like further clarification, please feel free to contact us."</text>
+    </literalExpression>
+  </decision>
+  <inputData id="InputData_1y777x8" name="salary" />
+  <inputData id="InputData_10ydu45" name="creditScore" />
+  <textAnnotation id="TextAnnotation_0ee8h54">
+    <text>Loan Approval</text>
+  </textAnnotation>
+  <association id="Association_0z2hitg">
+    <sourceRef href="#TextAnnotation_0ee8h54" />
+    <targetRef href="#decision_0a24hyi" />
+  </association>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram id="DMNDiagram_0ofpq6j">
+      <dmndi:DMNShape id="DMNShape_15f3aud" dmnElementRef="decision_0a24hyi">
+        <dc:Bounds height="80" width="180" x="310" y="120" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="DMNShape_0cftq80" dmnElementRef="TextAnnotation_0ee8h54">
+        <dc:Bounds height="35" width="100" x="130" y="62" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_03czgbu" dmnElementRef="Association_0z2hitg">
+        <di:waypoint x="230" y="77" />
+        <di:waypoint x="310" y="160" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="DMNEdge_1ny20mw" dmnElementRef="InformationRequirement_1etwdlw">
+        <di:waypoint x="490" y="160" />
+        <di:waypoint x="520" y="160" />
+        <di:waypoint x="540" y="160" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNShape id="DMNShape_08az81i" dmnElementRef="Decision_12mjgue">
+        <dc:Bounds height="80" width="180" x="540" y="120" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="DMNShape_008hc3q" dmnElementRef="InputData_1y777x8">
+        <dc:Bounds height="45" width="125" x="127" y="137" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_1k87uhl" dmnElementRef="InformationRequirement_07fwlid">
+        <di:waypoint x="252" y="160" />
+        <di:waypoint x="290" y="160" />
+        <di:waypoint x="310" y="160" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNShape id="DMNShape_0yuf8lz" dmnElementRef="InputData_10ydu45">
+        <dc:Bounds height="45" width="125" x="337" y="257" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_0eomc65" dmnElementRef="InformationRequirement_1cy5gcx">
+        <di:waypoint x="400" y="257" />
+        <di:waypoint x="400" y="220" />
+        <di:waypoint x="400" y="200" />
+      </dmndi:DMNEdge>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</definitions>
