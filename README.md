@@ -77,8 +77,31 @@ cd DMN-prompting-project
 pip install -r requirements.txt
 ```
 
----
 
+## 📓 Notebooks and How to Use Them
+
+This project includes two Jupyter notebooks:
+
+- [loan_approval.ipynb](src/process_feedback/loan_approval.ipynb)  
+  → This is the **main notebook**. It demonstrates how the LLM uses the DMN logic to generate feedback for student-submitted process descriptions.  
+  🟢 Inputs: plain-text process descriptions (e.g., `loan_approval_test1.txt`)  
+  🟢 Logic: decision rules from `loan_approval.dmn`  
+  🟢 Output: automated feedback messages
+
+- [convert_pnml_to_text.ipynb](utils/convert_pnml_to_text.ipynb)  
+  → This notebook **converts PNML (Petri Net Markup Language) files** into simple textual descriptions to be used as inputs for the feedback system.
+
+### ▶️ How to Run the Notebooks
+
+1. Launch Jupyter:
+   ```bash
+   jupyter notebook
+   ```
+2. Open the desired notebook from the file browser.
+3. Run each cell with `Shift + Enter`.
+
+> 💡 Make sure your OpenAI API key is configured before running the feedback generation code.
+---
 ## License
 
 This project is licensed under the MIT License.
