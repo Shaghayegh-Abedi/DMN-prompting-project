@@ -88,7 +88,7 @@ This project includes two Jupyter notebooks:
   🟢 Logic: decision rules from `loan_approval.dmn`  
   🟢 Output: automated feedback messages
 
-- [convert_pnml_to_text.ipynb](src/utils/convert_pnml_to_text.ipynb)  
+- [Convert_pnml_to_text.ipynb](src/utils/Convert_pnml_to_text.ipynb)  
   → This notebook **converts PNML (Petri Net Markup Language) files** into simple textual descriptions to be used as inputs for student-submitted process descriptions.  
 
 ### ▶️ How to Run the Notebooks
