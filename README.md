@@ -3,7 +3,7 @@
 This repository presents the implementation and evaluation of a novel **DMN-guided prompting framework** for controlling Large Language Models (LLMs) in automated feedback generation. The work is based on the thesis:
 
 📄 **[DMN-Guided Prompting: A Framework for Controlling LLM Behavior](https://arxiv.org/abs/2505.11701)**  
-💻 Supplementary Code for the Paper
+💻 Supplementary Code for the Paper         
 👨‍🏫 Authors: Shaghayegh Abedi, Politecnico di Torino  and Dr. Amin Jalali, Stockholm University
 
 ---
