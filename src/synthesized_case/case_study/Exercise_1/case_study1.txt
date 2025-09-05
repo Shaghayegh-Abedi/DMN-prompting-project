@@ -1,0 +1,11 @@
+✅ Final Evaluation Results:
+Rule1:true
+Rule2:true
+Rule3:true
+Rule4:true
+Rule5:false
+Please note that we can perform checking fraud using ML model earlie, as it will be automated and will not needed to be performed in the same position that manual fraud checking had been performed.
+Rule6:true
+Rule7:true
+Rule8:true
+Rule9:true

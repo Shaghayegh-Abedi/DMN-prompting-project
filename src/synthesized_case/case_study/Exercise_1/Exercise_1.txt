@@ -1,0 +1,41 @@
+Detected start transitions: ['Recieve Online Registration', 'Register Request [rolename: Clerak]']
+
+[Process Structure]
+Recieve Online Registration -> Send Credit check request
+    Send Credit check request -> Recieve Result and register results
+        Recieve Result and register results ->? { Check Results_p_1, Check Results } (XOR-split)
+            Check Results_p_1 -> ready to start enabling
+                ready to start enabling ->{ Enable customer to update profile, Enable incoming transactions } (AND-split)
+                        { customer profile updated, incoming transactions enabled } -> enabled profile and transactions (AND-join)
+                        enabled profile and transactions -> Inform customer by message
+                            Inform customer by message ->? { Rivew fraud with ML model, Rivew fraud with ML model_p_2 } (XOR-split)
+                                Rivew fraud with ML model -> continued with the non fraudulent results
+                                    continued with the non fraudulent results -> Enable customer full acess
+                                        Enable customer full acess -> Inform the customer
+                                            Inform the customer -> merge either treating fradulent or non fradulent results
+                                                merge either treating fradulent or non fradulent results -> merge treating for either results are ok and not ok cases
+                                                    merge treating for either results are ok and not ok cases -> End
+                                Rivew fraud with ML model_p_2 ->? { Review the case for fraud by manually [rolename: Fraud Investigator], Review the case for fraud by manually_p_2 [rolename: Fraud Investigator] } (XOR-split)
+                                    Review the case for fraud by manually [rolename: Fraud Investigator] -> continued with the non fraudulent results_p_1
+                                        continued with the non fraudulent results_p_1 -> Enable customer full acess
+                                    Review the case for fraud by manually_p_2 [rolename: Fraud Investigator] -> Send to external fraud investigator
+                                        Send to external fraud investigator -> ready to recieve results
+                                            ready to recieve results ->? { waiting for two days, Recieve and register result } (XOR-split)
+                                                waiting for two days -> Send Reminder
+                                                    Send Reminder -> ready to recieve results_p_1
+                                                        ready to recieve results_p_1 ->? { waiting for two days, Recieve and register result } (XOR-split)
+                                                            waiting for two days (loop)
+                                                            Recieve and register result ->? { check the results_p_2, check the results } (XOR-split)
+                                                                check the results_p_2 -> continued with the non fraudulent results_p_3
+                                                                    continued with the non fraudulent results_p_3 -> Enable customer full acess
+                                                                check the results -> Reday to disable profile and transactions
+                                                                    Reday to disable profile and transactions ->{ Disable incoming transactions, Disbale customer to update profile } (AND-split)
+                                                                            { customr profile disabled, incoming transactions disabled } -> disabled profile and transactions and ready to send rejection letter and report to police (AND-join)
+                                                                            disabled profile and transactions and ready to send rejection letter and report to police ->{ Report case to police, Send rejection letter [rolename: CRM officer] } (AND-split)
+                                                                                    { case reported to police, rejecion letter sent } -> finished sending rejection letter and reported to police (AND-join)
+                                                                                    finished sending rejection letter and reported to police -> merge either treating fradulent or non fradulent results_p_1
+                                                                                        merge either treating fradulent or non fradulent results_p_1 -> merge treating for either results are ok and not ok cases
+            Check Results -> Send rejection Letter [rolename: CRM officer]
+                Send rejection Letter [rolename: CRM officer] -> merge treating for either results are ok and not ok cases_p_1
+                    merge treating for either results are ok and not ok cases_p_1 -> End
+Register Request [rolename: Clerak] -> Send Credit check request

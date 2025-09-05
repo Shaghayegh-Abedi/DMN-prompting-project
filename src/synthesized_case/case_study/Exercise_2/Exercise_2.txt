@@ -1,0 +1,36 @@
+Detected start transitions: ['register request [rolename: Clerk]', 'Self Registration']
+
+[Process Structure]
+register request [rolename: Clerk] ->? { Check and Register Results_p_1, Check and Register Results } (XOR-split)
+    Check and Register Results_p_1 -> Enabling Access
+        Enabling Access ->{ Enabling Incoming Transations, Enabling Profile } (AND-split)
+                { Transactions Enabled, Profile Enabled } -> Send Confirmation (AND-join)
+                Send Confirmation ->? { Review Case with ML_p_1, Review Case with ML } (XOR-split)
+                    Review Case with ML_p_1 -> No Fraud found
+                        No Fraud found -> Enable Full Access
+                            Enable Full Access -> Inform to Customer
+                                Inform to Customer -> Process Completion_p_2
+                                    Process Completion_p_2 -> End
+                    Review Case with ML ->? { Manual Review_p_1 [rolename: Fraud Investigator], Manual Review [rolename: Fraud Investigator] } (XOR-split)
+                        Manual Review_p_1 [rolename: Fraud Investigator] -> Send to External FI
+                            Send to External FI -> Processing Case or Reminder
+                                Processing Case or Reminder ->? { Receive and Register Results, Receive and Register Results_p_1, Completing 2 days [rolename: Clock] } (XOR-split)
+                                    Receive and Register Results -> Disabling Access
+                                        Disabling Access ->{ Disabling Inc. Transactions, Disabling Profile Access } (AND-split)
+                                                { Disabled, Disabled } -> Informing (AND-join)
+                                                Informing ->{ Send Rejection letter [rolename: CRM Officer], Report the case to Police } (AND-split)
+                                                        { Reported, Letter Sent } -> Reporting (AND-join)
+                                                        Reporting -> Process Completion_p_1
+                                                            Process Completion_p_1 -> End
+                                    Receive and Register Results_p_1 -> No Fraud found_p_2
+                                        No Fraud found_p_2 -> Enable Full Access
+                                    Completing 2 days [rolename: Clock] -> Send reminder
+                                        Send reminder -> Processing Case or Reminder_p_1
+                                            Processing Case or Reminder_p_1 ->? { Receive and Register Results, Receive and Register Results_p_1, Completing 2 days [rolename: Clock] } (XOR-split)
+                                                Completing 2 days [rolename: Clock] (loop)
+                        Manual Review [rolename: Fraud Investigator] -> No Fraud found_p_3
+                            No Fraud found_p_3 -> Enable Full Access
+    Check and Register Results -> Send Rejection Letter [rolename: CRM Officer]
+        Send Rejection Letter [rolename: CRM Officer] -> Process Completion
+            Process Completion -> End
+Self Registration ->? { Check and Register Results_p_1, Check and Register Results } (XOR-split)

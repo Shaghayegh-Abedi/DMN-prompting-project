@@ -1,0 +1,758 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_15mt6us" name="DRD" namespace="http://camunda.org/schema/1.0/dmn" exporter="dmn-js (https://demo.bpmn.io/dmn)" exporterVersion="17.2.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.7.0">
+  <decision id="Decision_0qktd64" name="Rule1">
+    <informationRequirement id="InformationRequirement_1g05n08">
+      <requiredInput href="#InputData_1hameo4" />
+    </informationRequirement>
+    <decisionTable id="DecisionTable_0znqjrb" hitPolicy="FIRST">
+      <input id="Input_1" label="Rule1_expression">
+        <inputExpression id="InputExpression_1" typeRef="boolean">
+          <text>count(DetectedStartTransitions) &gt; 1 and (
+  
+    some t in DetectedStartTransitions satisfies (t.name contains string ("[rolename:")) and
+    
+  
+  or
+  (
+    every t in DetectedStartTransitions satisfies not(t.name contains string ("[rolename:")) and
+    "registration manually" in DetectedStartTransitions.name
+  )
+)
+
+
+
+</text>
+        </inputExpression>
+      </input>
+      <output id="Output_1" label="Is Eligible for Triage?" name="Triage_result" typeRef="string" />
+      <rule id="DecisionRule_0nrlc5g">
+        <inputEntry id="UnaryTests_1fw7xyf">
+          <text>true</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0tk4sr0">
+          <text></text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0julqx8">
+        <inputEntry id="UnaryTests_0xqcyi2">
+          <text>false</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0ty1dvg">
+          <text>Rule1_message</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_195u963">
+        <inputEntry id="UnaryTests_1lexfgb">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1m7vb6o">
+          <text></text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <inputData id="InputData_1qiuyh7" name="Rule2_expression" />
+  <decision id="Decision_05xmiuo" name="Rule2">
+    <informationRequirement id="InformationRequirement_092ixrf">
+      <requiredInput href="#InputData_1qiuyh7" />
+    </informationRequirement>
+    <decisionTable id="DecisionTable_1vf49dt" hitPolicy="FIRST">
+      <input id="InputClause_1l6rsix" label="Rule2_expression">
+        <inputExpression id="LiteralExpression_0vqz2jz" typeRef="boolean">
+          <text>every t in DetectedStartTransitions satisfies
+  some t1 in ProcessTransitions satisfies
+    t1.name = t.next and
+    contains(lower case(t1.name), "send credit request to uc") 
+
+
+
+  
+      
+</text>
+        </inputExpression>
+      </input>
+      <output id="OutputClause_12szf77" label="Request credit check_output" name="Request credit check_result" typeRef="string" />
+      <rule id="DecisionRule_0c5v58v">
+        <inputEntry id="UnaryTests_1y1099m">
+          <text>true</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_17nmz3y">
+          <text>Rule2_first_message</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0rafu8s">
+        <inputEntry id="UnaryTests_0qj05ot">
+          <text>false</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1kpcd5e">
+          <text>Rule2_second_message</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <decision id="Decision_0yin5sm" name="Rule2_message">
+    <variable id="InformationItem_136vvpb" name="Rule2_message" typeRef="string" />
+    <informationRequirement id="InformationRequirement_1d61x1c">
+      <requiredDecision href="#Decision_05xmiuo" />
+    </informationRequirement>
+    <literalExpression id="LiteralExpression_16qb9fr">
+      <text>Rule2_first_message = "Your assignment satisfies Rule2."
+Rule2_second_message = "Please note that the process shall check customer's credit after registration."
+
+ </text>
+    </literalExpression>
+  </decision>
+  <decision id="Decision_0wms64a" name="Rule1_message">
+    <variable id="InformationItem_1su6f2n" name="Rule1_message" typeRef="string" />
+    <informationRequirement id="InformationRequirement_1l3l6uo">
+      <requiredDecision href="#Decision_0qktd64" />
+    </informationRequirement>
+    <literalExpression id="LiteralExpression_0k94mjx">
+      <text>if count(DetectedStartTransitions) &lt;= 1 then
+    "Please note that the expected solution shall support registrating application online and manual."
+
+else if not (some t in DetectedStartTransitions satisfies t.name contains string("[rolename:")) then
+    "Please check if specific role has been assigned or manual registration."
+
+else if not (every t in DetectedStartTransitions satisfies
+             t.previous = DetectedStartTransitions[1].previous) then
+    "Please check that it is not clear in advanced that the customer will register online or manual."
+
+
+</text>
+    </literalExpression>
+  </decision>
+  <inputData id="InputData_1hameo4" name="Rule1_expression" />
+  <decision id="Decision_18ue2c7" name="Rule4">
+    <informationRequirement id="InformationRequirement_0bzrifw">
+      <requiredInput href="#InputData_0cit267" />
+    </informationRequirement>
+    <decisionTable id="DecisionTable_1sf60ta" hitPolicy="FIRST">
+      <input id="InputClause_0x2egct" label="Rule4_expression">
+        <inputExpression id="LiteralExpression_0fba6iy" typeRef="boolean">
+          <text>some t1 in ProcessTransitions satisfies
+  
+
+    next_transition.name = t1.next and
+    next_transition.label = "AND-split" and
+
+    contains(lower_case(enable1.name), "enable customer profile update") and
+    contains(lower_case(enable2.name), "enable incoming transactions")
+
+     
+
+      </text>
+        </inputExpression>
+      </input>
+      <output id="OutputClause_0tpcb2y" label="Enabling_concatenation_output" name="Enabling_concatenation_result" typeRef="string" />
+      <rule id="DecisionRule_1t0xci2">
+        <inputEntry id="UnaryTests_1mmm1qu">
+          <text>true</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1o8njkk">
+          <text>Rule4_first_message</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1yxmngt">
+        <inputEntry id="UnaryTests_09plb6m">
+          <text>false</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1kfqgko">
+          <text>Rule4_second_message</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <decision id="Decision_0p6abca" name="Rule4_message">
+    <variable id="InformationItem_1036gfb" name="Rule4_message" typeRef="string" />
+    <informationRequirement id="InformationRequirement_1k4hcjs">
+      <requiredDecision href="#Decision_18ue2c7" />
+    </informationRequirement>
+    <literalExpression id="LiteralExpression_1f5xqjj">
+      <text>    Rule3_first_message = "Your assignment satisfies rule 4."
+    Rule4_second_message = "Please note that the process model shall enable customer profile update and incoming transaction in parallel."</text>
+    </literalExpression>
+  </decision>
+  <inputData id="InputData_0cit267" name="Rule4_expression" />
+  <inputData id="InputData_1l9mc9f" name="Rule3_expression" />
+  <decision id="Decision_1tbbuhx" name="Rule3">
+    <informationRequirement id="InformationRequirement_0sgcdm8">
+      <requiredInput href="#InputData_1l9mc9f" />
+    </informationRequirement>
+    <decisionTable id="DecisionTable_1aig1g6" hitPolicy="FIRST">
+      <input id="InputClause_1smxvwn" label="Rule3_expression">
+        <inputExpression id="LiteralExpression_0eng5z7" typeRef="boolean">
+          <text>some t2 in ProcessTransitions satisfies
+      t2.name = t1.next and
+      contains(lower case(t2.name), "receive result") and
+      t2.label = "XOR-split"</text>
+        </inputExpression>
+      </input>
+      <output id="OutputClause_14itho0" label="Receive credit result_output" typeRef="string" />
+      <rule id="DecisionRule_15lcn47">
+        <inputEntry id="UnaryTests_0ci0env">
+          <text>true</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0b62rvj">
+          <text>Rule3_first_message</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_09d3ntq">
+        <inputEntry id="UnaryTests_1si6ns3">
+          <text>false</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_14l6yqi">
+          <text>Rule3_second_message</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <decision id="Decision_1u0lq73" name="Rule3_message">
+    <variable id="InformationItem_094uwvo" name="Rule3_message" />
+    <informationRequirement id="InformationRequirement_1xftfv2">
+      <requiredDecision href="#Decision_1tbbuhx" />
+    </informationRequirement>
+    <literalExpression id="LiteralExpression_0qml8yj">
+      <text>    Rule3_first_message = "Your assignment satisfies Rule3."
+    Rule3_second_message = "Please note that the process should behave differently depending on the credit check result."
+</text>
+    </literalExpression>
+  </decision>
+  <inputData id="InputData_1m7agfw" name="Rule5_expression" />
+  <decision id="Decision_00un4yq" name="Rule5">
+    <informationRequirement id="InformationRequirement_0vaadqw">
+      <requiredInput href="#InputData_1m7agfw" />
+    </informationRequirement>
+    <decisionTable id="DecisionTable_1dod64p" hitPolicy="FIRST">
+      <input id="InputClause_0c7p3hr" label="Rule5_expression">
+        <inputExpression id="LiteralExpression_1vk29k1" typeRef="boolean">
+          <text>some t1 in ProcessTransitions satisfies
+   
+
+    next_transition.name = t1.next and
+    next_transition.label = "AND-split" and
+
+    contains(lower_case(enable1.name), "enable customer profile update") and
+    contains(lower_case(enable2.name), "enable incoming transactions") and 
+    contains(lower_case(enable2.name), "potential fraud using ML")
+</text>
+        </inputExpression>
+      </input>
+      <output id="OutputClause_0aqjpdv" label="Early fraud check_output" name="Early fraud check_result" typeRef="string" />
+      <rule id="DecisionRule_1y1npvy">
+        <inputEntry id="UnaryTests_14rqbib">
+          <text>true</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1ugn71o">
+          <text>Rule5_first_message</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0itiqmb">
+        <inputEntry id="UnaryTests_0yl85o5">
+          <text>false</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0wesilt">
+          <text>Rule5_second_message</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <decision id="Decision_0t1607j" name="Rule5_message">
+    <variable id="InformationItem_0vp1bql" name="Rule5_message" typeRef="string" />
+    <informationRequirement id="InformationRequirement_1uvxwl3">
+      <requiredDecision href="#Decision_00un4yq" />
+    </informationRequirement>
+    <literalExpression id="LiteralExpression_11bdw71">
+      <text>Rule5_first_message = "Your assignment satisfies rule 5."
+Rule5_second_message = "Please note that we can perform checking fraud using ML model earlie, as it will be automated and will not needed to be performed in the same position that manual fraud checking had been performed."</text>
+    </literalExpression>
+  </decision>
+  <inputData id="InputData_0ifn6rn" name="Rule6_expression" />
+  <decision id="Decision_14ywf88" name="Rule6">
+    <informationRequirement id="InformationRequirement_04frwo2">
+      <requiredInput href="#InputData_0ifn6rn" />
+    </informationRequirement>
+    <decisionTable id="DecisionTable_1sodggs" hitPolicy="FIRST">
+      <input id="InputClause_17uttcc" label="Rule6_expression">
+        <inputExpression id="LiteralExpression_1i96yay" typeRef="boolean">
+          <text>filter t1 in ProcessTransitions where contains(lower_case(t1.name), "2 days"))[1].previous =
+filter t2 in ProcessTransitions where contains(lower_case(t2.name), "receive result"))[1].previous
+
+</text>
+        </inputExpression>
+      </input>
+      <output id="OutputClause_17f75cm" label="Request external fraud checking_output" name="Request external fraud checking_result" typeRef="string" />
+      <rule id="DecisionRule_1kb5gnm">
+        <inputEntry id="UnaryTests_1e60qgk">
+          <text>true</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1cvxjn5">
+          <text>Rule6_first_message</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0si1j6l">
+        <inputEntry id="UnaryTests_0lxt0ze">
+          <text>false</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1g6b2r0">
+          <text>Rule6_second_message</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <decision id="Decision_0f5crhd" name="Rule6_message">
+    <variable id="InformationItem_1pvi65t" name="Rule6_message" typeRef="string" />
+    <informationRequirement id="InformationRequirement_1pslnfr">
+      <requiredDecision href="#Decision_14ywf88" />
+    </informationRequirement>
+    <literalExpression id="LiteralExpression_1rircmi">
+      <text>Rule6_first_message = "Your assignment satisfies rule 6."
+Rule6_second_message = "Please note that we do not know if we will receive the result for external fraud investigation in 2 days in advanced"</text>
+    </literalExpression>
+  </decision>
+  <inputData id="InputData_1hywkkq" name="Rule7_expression" />
+  <decision id="Decision_1rsn3lz" name="Rule7">
+    <informationRequirement id="InformationRequirement_0f8dpxt">
+      <requiredInput href="#InputData_1hywkkq" />
+    </informationRequirement>
+    <decisionTable id="DecisionTable_1sosgqm" hitPolicy="FIRST">
+      <input id="InputClause_1tcl5bl" label="Rule7_expression">
+        <inputExpression id="LiteralExpression_1u7alzu" typeRef="boolean">
+          <text>some t1 in ProcessTransitions satisfies
+  contains(lower_case(t1.name), "disable customer profile update") and
+  some t2 in ProcessTransitions satisfies
+    contains(lower_case(t2.name), "disable incoming transactions") and
+    t1.previous = t2.previous
+
+
+      </text>
+        </inputExpression>
+      </input>
+      <output id="OutputClause_0xvn8nn" label="Disabling services due to fraud_output" name="Disabling services due to fraud_result" typeRef="string" />
+      <rule id="DecisionRule_1agcg2c">
+        <inputEntry id="UnaryTests_04bxtc6">
+          <text>true</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_03xdtss">
+          <text>Rule6_first_message</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0b4ek2h">
+        <inputEntry id="UnaryTests_1ds6u52">
+          <text>false</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1ytwtre">
+          <text>Rule6_second_message</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <decision id="Decision_1xp65w4" name="Rule7_message">
+    <variable id="InformationItem_1ko2wbd" name="Rule7_message" typeRef="string" />
+    <informationRequirement id="InformationRequirement_0kjnysi">
+      <requiredDecision href="#Decision_1rsn3lz" />
+    </informationRequirement>
+    <literalExpression id="LiteralExpression_1g7w3k2">
+      <text>Rule6_first_message = "Your assignment satisfies rule 7."
+Rule7_second_message = "Please note that disable customer profile update and disable incoming transactions shall be performed in parallel after identifying fraud."</text>
+    </literalExpression>
+  </decision>
+  <inputData id="InputData_17ops91" name="Rule8_expression" />
+  <decision id="Decision_0zdtdlw" name="Rule8">
+    <informationRequirement id="InformationRequirement_0kxntil">
+      <requiredInput href="#InputData_17ops91" />
+    </informationRequirement>
+    <decisionTable id="DecisionTable_052cp46" hitPolicy="FIRST">
+      <input id="InputClause_1j35lhw" label="Rule8_expression">
+        <inputExpression id="LiteralExpression_0e7xima" typeRef="boolean">
+          <text>some t1 in ProcessTransitions satisfies
+  contains(lower_case(t1.name), "send rejection letter") and
+  some t2 in ProcessTransitions satisfies
+    contains(lower_case(t2.name),"report") and
+    t1.previous = t2.previous</text>
+        </inputExpression>
+      </input>
+      <output id="OutputClause_1qch7vy" label="Police report_output" name="Police report_result" typeRef="string" />
+      <rule id="DecisionRule_1tj2ul7">
+        <inputEntry id="UnaryTests_146yil5">
+          <text>true</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_10zpdl5">
+          <text>Rule6_first_message</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1htpgpk">
+        <inputEntry id="UnaryTests_16119al">
+          <text>false</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0imv87p">
+          <text>Rule6_second_message</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <decision id="Decision_1jh91nv" name="Rule8_message">
+    <variable id="InformationItem_0veoe2t" name="Rule8_message" typeRef="string" />
+    <informationRequirement id="InformationRequirement_0wvquct">
+      <requiredDecision href="#Decision_0zdtdlw" />
+    </informationRequirement>
+    <literalExpression id="LiteralExpression_0lpipqz">
+      <text>Rule6_first_message = "Your assignment satisfies rule 8."
+Rule6_second_message = "Please note that send rejection letter and send report to the police shall be performed in parallel after disabling services."</text>
+    </literalExpression>
+  </decision>
+  <inputData id="InputData_1spmn3n" name="Rule9_expression" />
+  <decision id="Decision_14n6bnl" name="Rule9">
+    <informationRequirement id="InformationRequirement_0l5tegk">
+      <requiredInput href="#InputData_1spmn3n" />
+    </informationRequirement>
+    <decisionTable id="DecisionTable_0evavs1" hitPolicy="FIRST">
+      <input id="InputClause_07izjvo" label="Rule9_expression">
+        <inputExpression id="LiteralExpression_0hg2in8" typeRef="boolean">
+          <text>some t1 in ProcessTransitions satisfies
+  contains(lower_case(t1.name), "disable customer profile update") and
+  some t2 in ProcessTransitions satisfies
+    contains(lower_case(t2.name), "disable incoming transactions") and
+    
+
+
+    some t3 in ProcessTransitions satisfies
+  contains(lower_case(t3.name), "send rejection letter") and
+  some t4 in ProcessTransitions satisfies
+    contains(lower_case(t4.name),"report") and
+   
+
+    t1.next = t2.next =   t3.previous = t4.previous</text>
+        </inputExpression>
+      </input>
+      <output id="OutputClause_1m3b0ds" typeRef="string" />
+      <rule id="DecisionRule_1aprddy">
+        <inputEntry id="UnaryTests_1es2w83">
+          <text>true</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_14undqt">
+          <text>Rule6_first_message</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0kamkgw">
+        <inputEntry id="UnaryTests_1caq25q">
+          <text>false</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0gv55kq">
+          <text>Rule6_second_message</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <decision id="Decision_0b2stjt" name="Rule9_message">
+    <variable id="InformationItem_1wg9jvb" name="Rule9_message" typeRef="string" />
+    <informationRequirement id="InformationRequirement_1lwdzyj">
+      <requiredDecision href="#Decision_14n6bnl" />
+    </informationRequirement>
+    <literalExpression id="LiteralExpression_051j22y">
+      <text>Rule6_first_message = "Your assignment satisfies rule 9."
+Rule6_second_message = "Please note that reporting the case to police and send rejection letter shall be performed after disabling the services."</text>
+    </literalExpression>
+  </decision>
+  <textAnnotation id="TextAnnotation_1lw2dr6">
+    <text>Triage</text>
+  </textAnnotation>
+  <association id="Association_025q0yy">
+    <sourceRef href="#TextAnnotation_1lw2dr6" />
+    <targetRef href="#InputData_1hameo4" />
+  </association>
+  <textAnnotation id="TextAnnotation_103m06n">
+    <text>Request credit check</text>
+  </textAnnotation>
+  <association id="Association_1s0to20">
+    <sourceRef href="#TextAnnotation_103m06n" />
+    <targetRef href="#InputData_1qiuyh7" />
+  </association>
+  <textAnnotation id="TextAnnotation_0itzd3h">
+    <text>Check credit result</text>
+  </textAnnotation>
+  <association id="Association_1j8v540">
+    <sourceRef href="#TextAnnotation_0itzd3h" />
+    <targetRef href="#InputData_1l9mc9f" />
+  </association>
+  <textAnnotation id="TextAnnotation_14y8cx0">
+    <text>Enabling_concatenation</text>
+  </textAnnotation>
+  <association id="Association_0gvlxu9">
+    <sourceRef href="#TextAnnotation_14y8cx0" />
+    <targetRef href="#InputData_0cit267" />
+  </association>
+  <textAnnotation id="TextAnnotation_192xfyu">
+    <text>Early fraud check</text>
+  </textAnnotation>
+  <association id="Association_0d1zu3a">
+    <sourceRef href="#TextAnnotation_192xfyu" />
+    <targetRef href="#InputData_1m7agfw" />
+  </association>
+  <textAnnotation id="TextAnnotation_1wuknk4">
+    <text>Request external fraud checking</text>
+  </textAnnotation>
+  <association id="Association_1di5c3k">
+    <sourceRef href="#TextAnnotation_1wuknk4" />
+    <targetRef href="#InputData_0ifn6rn" />
+  </association>
+  <textAnnotation id="TextAnnotation_0502ypj">
+    <text>Disabling services due to fraud</text>
+  </textAnnotation>
+  <association id="Association_12v60uo">
+    <sourceRef href="#TextAnnotation_0502ypj" />
+    <targetRef href="#InputData_1hywkkq" />
+  </association>
+  <textAnnotation id="TextAnnotation_0mhi1fs">
+    <text>Police report</text>
+  </textAnnotation>
+  <association id="Association_08dzyvq">
+    <sourceRef href="#TextAnnotation_0mhi1fs" />
+    <targetRef href="#InputData_17ops91" />
+  </association>
+  <textAnnotation id="TextAnnotation_01h1lmz">
+    <text>Police report after disabling services</text>
+  </textAnnotation>
+  <association id="Association_1njednn">
+    <sourceRef href="#TextAnnotation_01h1lmz" />
+    <targetRef href="#InputData_1spmn3n" />
+  </association>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram>
+      <dmndi:DMNShape dmnElementRef="Decision_0qktd64">
+        <dc:Bounds height="80" width="180" x="600" y="80" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="DMNShape_12g01hq" dmnElementRef="InputData_1qiuyh7">
+        <dc:Bounds height="45" width="125" x="437" y="197" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="DMNShape_1vdaaw6" dmnElementRef="Decision_05xmiuo">
+        <dc:Bounds height="80" width="180" x="600" y="180" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="DMNShape_10gdfwg" dmnElementRef="Decision_0yin5sm">
+        <dc:Bounds height="80" width="180" x="830" y="186" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="DMNShape_0ps7vqp" dmnElementRef="Decision_0wms64a">
+        <dc:Bounds height="80" width="180" x="830" y="80" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_0j9u2mo" dmnElementRef="InformationRequirement_1l3l6uo">
+        <di:waypoint x="780" y="120" />
+        <di:waypoint x="810" y="120" />
+        <di:waypoint x="830" y="120" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNShape id="DMNShape_1v15vfh" dmnElementRef="InputData_1hameo4">
+        <dc:Bounds height="45" width="125" x="437" y="97" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_1icrgar" dmnElementRef="InformationRequirement_1d61x1c">
+        <di:waypoint x="780" y="220" />
+        <di:waypoint x="810" y="226" />
+        <di:waypoint x="830" y="226" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="DMNEdge_1lqdla4" dmnElementRef="InformationRequirement_1g05n08">
+        <di:waypoint x="562" y="120" />
+        <di:waypoint x="580" y="120" />
+        <di:waypoint x="600" y="120" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="DMNEdge_0o3tr7z" dmnElementRef="InformationRequirement_092ixrf">
+        <di:waypoint x="562" y="220" />
+        <di:waypoint x="580" y="220" />
+        <di:waypoint x="600" y="220" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNShape id="DMNShape_003y3wt" dmnElementRef="Decision_18ue2c7">
+        <dc:Bounds height="80" width="180" x="610" y="410" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="DMNShape_0ybuedz" dmnElementRef="Decision_0p6abca">
+        <dc:Bounds height="80" width="180" x="860" y="410" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="DMNShape_08oyjze" dmnElementRef="InputData_0cit267">
+        <dc:Bounds height="45" width="125" x="417" y="417" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_0wfme2w" dmnElementRef="InformationRequirement_0bzrifw">
+        <di:waypoint x="542" y="440" />
+        <di:waypoint x="590" y="450" />
+        <di:waypoint x="610" y="450" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="DMNEdge_03ihw95" dmnElementRef="InformationRequirement_1k4hcjs">
+        <di:waypoint x="790" y="450" />
+        <di:waypoint x="840" y="450" />
+        <di:waypoint x="860" y="450" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNShape id="DMNShape_0flm2pn" dmnElementRef="InputData_1l9mc9f">
+        <dc:Bounds height="45" width="125" x="438" y="317" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="DMNShape_1caroxn" dmnElementRef="Decision_1tbbuhx">
+        <dc:Bounds height="80" width="180" x="610" y="300" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="DMNShape_08nrnp8" dmnElementRef="Decision_1u0lq73">
+        <dc:Bounds height="80" width="180" x="840" y="300" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_0hpicuk" dmnElementRef="InformationRequirement_0sgcdm8">
+        <di:waypoint x="563" y="340" />
+        <di:waypoint x="590" y="340" />
+        <di:waypoint x="610" y="340" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="DMNEdge_01c67c3" dmnElementRef="InformationRequirement_1xftfv2">
+        <di:waypoint x="790" y="340" />
+        <di:waypoint x="820" y="340" />
+        <di:waypoint x="840" y="340" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNShape id="DMNShape_10hiu8j" dmnElementRef="TextAnnotation_1lw2dr6">
+        <dc:Bounds height="33" width="130" x="275" y="103" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_18h5wpx" dmnElementRef="Association_025q0yy">
+        <di:waypoint x="405" y="125" />
+        <di:waypoint x="437" y="123" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNShape id="DMNShape_0j8lmic" dmnElementRef="TextAnnotation_103m06n">
+        <dc:Bounds height="32" width="150" x="230" y="210" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_1pv2m2m" dmnElementRef="Association_1s0to20">
+        <di:waypoint x="380" y="220" />
+        <di:waypoint x="437" y="220" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNShape id="DMNShape_0fu8d4k" dmnElementRef="TextAnnotation_0itzd3h">
+        <dc:Bounds height="40" width="130" x="225" y="320" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_0slc9bo" dmnElementRef="Association_1j8v540">
+        <di:waypoint x="355" y="355" />
+        <di:waypoint x="438" y="346" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNShape id="DMNShape_1eyyebw" dmnElementRef="TextAnnotation_14y8cx0">
+        <dc:Bounds height="80" width="100" x="240" y="400" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_0ujxbzl" dmnElementRef="Association_0gvlxu9">
+        <di:waypoint x="340" y="440" />
+        <di:waypoint x="417" y="440" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNShape id="DMNShape_1nm6m1x" dmnElementRef="InputData_1m7agfw">
+        <dc:Bounds height="45" width="125" x="417" y="527" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="DMNShape_1uzypo8" dmnElementRef="Decision_00un4yq">
+        <dc:Bounds height="80" width="180" x="610" y="510" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="DMNShape_1auat5q" dmnElementRef="TextAnnotation_192xfyu">
+        <dc:Bounds height="50" width="120" x="160" y="515" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_1p18t54" dmnElementRef="Association_0d1zu3a">
+        <di:waypoint x="280" y="555" />
+        <di:waypoint x="417" y="550" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNShape id="DMNShape_1emyy6l" dmnElementRef="Decision_0t1607j">
+        <dc:Bounds height="80" width="180" x="860" y="510" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_10flvg1" dmnElementRef="InformationRequirement_0vaadqw">
+        <di:waypoint x="542" y="550" />
+        <di:waypoint x="590" y="550" />
+        <di:waypoint x="610" y="550" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="DMNEdge_10oomz1" dmnElementRef="InformationRequirement_1uvxwl3">
+        <di:waypoint x="790" y="550" />
+        <di:waypoint x="840" y="550" />
+        <di:waypoint x="860" y="550" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNShape id="DMNShape_080nzxr" dmnElementRef="InputData_0ifn6rn">
+        <dc:Bounds height="45" width="125" x="438" y="638" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="DMNShape_0btxo76" dmnElementRef="TextAnnotation_1wuknk4">
+        <dc:Bounds height="80" width="100" x="200" y="610" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_14xk8rv" dmnElementRef="Association_1di5c3k">
+        <di:waypoint x="300" y="652" />
+        <di:waypoint x="438" y="658" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNShape id="DMNShape_1u3gtkc" dmnElementRef="Decision_14ywf88">
+        <dc:Bounds height="80" width="180" x="610" y="610" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="DMNShape_0nxvk1h" dmnElementRef="Decision_0f5crhd">
+        <dc:Bounds height="80" width="180" x="860" y="610" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_0ufcfjh" dmnElementRef="InformationRequirement_04frwo2">
+        <di:waypoint x="563" y="661" />
+        <di:waypoint x="590" y="650" />
+        <di:waypoint x="610" y="650" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="DMNEdge_1omsh77" dmnElementRef="InformationRequirement_1pslnfr">
+        <di:waypoint x="790" y="650" />
+        <di:waypoint x="840" y="650" />
+        <di:waypoint x="860" y="650" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNShape id="DMNShape_1i9wxfm" dmnElementRef="InputData_1hywkkq">
+        <dc:Bounds height="45" width="125" x="437" y="737" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="DMNShape_1cbr28o" dmnElementRef="Decision_1rsn3lz">
+        <dc:Bounds height="80" width="180" x="610" y="720" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="DMNShape_1rqwzzc" dmnElementRef="TextAnnotation_0502ypj">
+        <dc:Bounds height="80" width="100" x="140" y="750" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_0ui46zi" dmnElementRef="Association_12v60uo">
+        <di:waypoint x="240" y="785" />
+        <di:waypoint x="437" y="766" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNShape id="DMNShape_0b31wb1" dmnElementRef="Decision_1xp65w4">
+        <dc:Bounds height="80" width="180" x="870" y="720" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_0lrf470" dmnElementRef="InformationRequirement_0f8dpxt">
+        <di:waypoint x="562" y="760" />
+        <di:waypoint x="590" y="760" />
+        <di:waypoint x="610" y="760" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="DMNEdge_1it0xck" dmnElementRef="InformationRequirement_0kjnysi">
+        <di:waypoint x="790" y="760" />
+        <di:waypoint x="850" y="760" />
+        <di:waypoint x="870" y="760" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNShape id="DMNShape_1416318" dmnElementRef="InputData_17ops91">
+        <dc:Bounds height="45" width="125" x="438" y="838" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="DMNShape_0sjaks1" dmnElementRef="Decision_0zdtdlw">
+        <dc:Bounds height="80" width="180" x="610" y="820" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="DMNShape_1xavmxv" dmnElementRef="Decision_1jh91nv">
+        <dc:Bounds height="80" width="180" x="870" y="820" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="DMNShape_1fy4lzg" dmnElementRef="TextAnnotation_0mhi1fs">
+        <dc:Bounds height="80" width="100" x="240" y="821" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_18atezz" dmnElementRef="Association_08dzyvq">
+        <di:waypoint x="340" y="861" />
+        <di:waypoint x="438" y="861" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="DMNEdge_0az0oab" dmnElementRef="InformationRequirement_0kxntil">
+        <di:waypoint x="563" y="861" />
+        <di:waypoint x="590" y="860" />
+        <di:waypoint x="610" y="860" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="DMNEdge_1qogs3u" dmnElementRef="InformationRequirement_0wvquct">
+        <di:waypoint x="790" y="860" />
+        <di:waypoint x="850" y="860" />
+        <di:waypoint x="870" y="860" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNShape id="DMNShape_04p8aon" dmnElementRef="InputData_1spmn3n">
+        <dc:Bounds height="45" width="125" x="438" y="938" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="DMNShape_1kvob0k" dmnElementRef="Decision_14n6bnl">
+        <dc:Bounds height="80" width="180" x="600" y="940" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="DMNShape_0hzowol" dmnElementRef="TextAnnotation_01h1lmz">
+        <dc:Bounds height="80" width="100" x="240" y="930" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_0iomnuc" dmnElementRef="Association_1njednn">
+        <di:waypoint x="340" y="968" />
+        <di:waypoint x="438" y="964" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNShape id="DMNShape_0zx1mku" dmnElementRef="Decision_0b2stjt">
+        <dc:Bounds height="80" width="180" x="870" y="930" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_0n91yep" dmnElementRef="InformationRequirement_0l5tegk">
+        <di:waypoint x="563" y="961" />
+        <di:waypoint x="580" y="980" />
+        <di:waypoint x="600" y="980" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="DMNEdge_0i3z5vf" dmnElementRef="InformationRequirement_1lwdzyj">
+        <di:waypoint x="780" y="980" />
+        <di:waypoint x="850" y="970" />
+        <di:waypoint x="870" y="970" />
+      </dmndi:DMNEdge>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</definitions>
