@@ -4,6 +4,7 @@ This repository presents the implementation and evaluation of a novel **DMN-guid
 
 📄 **[DMN-Guided Prompting: A Framework for Controlling LLM Behavior](https://arxiv.org/abs/2505.11701)**       
 👨‍🏫 Authors: Shaghayegh Abedi, Politecnico di Torino  and Dr. Amin Jalali, Stockholm University
+   Thesis supervised by: Prof. Paolo Garza
 
 ---
 ## 🔍 Overview
